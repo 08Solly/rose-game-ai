@@ -11,6 +11,11 @@ def escape_obstacles(world):
     x = world.car.x
     y = world.car.y
 
+    found_penguin = findPenguin(world,x,y)
+
+    if found_penguin != actions.NONE:
+        return found_penguin
+
     if is_obstacle(world.get((x, y - 1))):
         if x == 0 or x == 3:
             return actions.RIGHT
@@ -41,3 +46,36 @@ def brake(obs):
         return actions.PICKUP
     else:
         return actions.NONE
+    
+
+def findPenguin(world: list[int, int],pos_x,pos_y: int):
+    """
+    Finds penguins in the world.\n
+    Return the position of the penguin if found, otherwise return (-1,-1)
+    """
+
+    
+    try:
+        if world.get((pos_x, pos_y - 1)) == obstacles.PENGUIN:
+            return actions.PICKUP
+        
+        if world.get((pos_x-1, pos_y-2)) == obstacles.PENGUIN:
+            if not is_obstacle(world.get((pos_x-1, pos_y-1))):
+                return actions.LEFT
+        if world.get((pos_x+1, pos_y-2)) == obstacles.PENGUIN:
+            if not is_obstacle(world.get((pos_x+1, pos_y-1))):
+                return actions.RIGHT
+        
+        if world.get((pos_x-2, pos_y-3)) == obstacles.PENGUIN:
+            if not is_obstacle(world.get((pos_x-2, pos_y-2))):
+                    return actions.LEFT
+        
+        if world.get((pos_x+2, pos_y-3)) == obstacles.PENGUIN:
+            if not is_obstacle(world.get((pos_x+2, pos_y-2))):
+                    return actions.RIGHT
+
+    except IndexError:    
+        return actions.NONE
+
+    return actions.NONE
+
