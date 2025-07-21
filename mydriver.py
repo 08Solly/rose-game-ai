@@ -47,6 +47,38 @@ def map_world(world) -> list[list[str]]:
 
     return lane_matrix
 
+
+def left_lane(world, x, y) -> str:
+    if (obstacle_T_F(map[2][x]) and obstacle_T_F(map[2][x + 1])) and not (
+            obstacle_T_F(map[1][x]) and not obstacle_T_F(map[1][x + 1])):
+        return actions.RIGHT
+    elif obstacle_T_F(map[1][x]):
+        return actions.RIGHT
+    return actions.NONE
+
+def right_lane(world, x, y) -> str:
+    if (obstacle_T_F(map[2][x]) and obstacle_T_F(map[2][x - 1])) and not (
+            obstacle_T_F(map[1][x]) and not obstacle_T_F(map[1][x - 1])):
+        return actions.LEFT
+    elif obstacle_T_F(map[1][x]):
+        return actions.LEFT
+    return actions.NONE
+
+def middle_lane(world, x, y) -> str:
+    if (obstacle_T_F(map[2][x]) == True and obstacle_T_F(map[2][x - 1]) == True) and (
+            obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x + 1]) == False):
+        return actions.RIGHT
+    elif (obstacle_T_F(map[2][x]) == True and obstacle_T_F(map[2][x + 1]) == True) and (
+            obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x - 1]) == False):
+        return actions.LEFT
+    elif obstacle_T_F(map[1][x]):
+        if obstacle_T_F(map[1][x + 1]):
+            return actions.RIGHT
+        else:
+            return actions.LEFT
+    return actions.NONE
+
+
 def escape(map,world):
     x = world.car.x
     y = world.car.y
@@ -58,30 +90,16 @@ def escape(map,world):
     #     if penguin_pos[0] < x:
     #         return actions.LEFT
     if x==0:
-        if (obstacle_T_F(map[2][x])==True and obstacle_T_F(map[2][x+1])==True) and (obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x+1]) == False):
-            return actions.RIGHT
-        elif obstacle_T_F(map[1][x]) == True:
-                return actions.RIGHT
-        return actions.NONE
+        return left_lane(world, x, y)
+
 
     elif x==2:
-        if (obstacle_T_F(map[2][x])==True and obstacle_T_F(map[2][x-1])==True) and (obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x-1]) == False):
-            return actions.LEFT
-        elif obstacle_T_F(map[1][x]) == True:
-                return actions.LEFT
-        return actions.NONE
+        return right_lane(world, x, y)
+
 
     elif x==1:
-        if (obstacle_T_F(map[2][x])==True and obstacle_T_F(map[2][x-1])==True) and (obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x+1]) == False):
-            return actions.RIGHT
-        elif (obstacle_T_F(map[2][x])==True and obstacle_T_F(map[2][x+1])==True) and (obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x-1]) == False):
-                return actions.LEFT
-        elif obstacle_T_F(map[1][x]) == True:
-            if obstacle_T_F(map[1][x+1]) == False:
-                return actions.RIGHT
-            else:
-                return actions.LEFT
-        return actions.NONE
+        return middle_lane(world, x, y)
+
 
 
 def obstacle_T_F(obs):
