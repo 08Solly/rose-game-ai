@@ -18,8 +18,17 @@ def escape_obstacles(world) -> str:
 
 
     found_penguin = findPenguin(world,x,y)
+    found_water = findWater(world,x,y)
+    found_crack = findCracks(world,x,y)
+
     if found_penguin != actions.NONE:
         return found_penguin
+    
+    if found_crack != actions.NONE:
+        return found_crack
+
+    if found_water != actions.NONE:
+        return found_water
 
     if is_obstacle(world.get((x, y - 1))):
         # left lane
@@ -63,10 +72,68 @@ def brake(obs) -> str:
         return actions.NONE
     
 
-def findPenguin(world: list[int, int],pos_x,pos_y: int):
+
+def findCracks(world: list[int, int],pos_x,pos_y: int):
     """
     Finds penguins in the world.\n
     Return the position of the penguin if found, otherwise return (-1,-1)
+    """
+
+    
+    try:
+        if world.get((pos_x,pos_y-1)) == obstacles.CRACK:
+            return actions.JUMP
+        
+        
+        if world.get((pos_x+1,pos_y-2)) == obstacles.CRACK:
+            if not is_obstacle(world.get((pos_x+1,pos_y-1))):
+                if pos_x+1<3:
+                    return actions.RIGHT
+                
+        if world.get((pos_x-1,pos_y-2)) == obstacles.CRACK:
+            if not is_obstacle(world.get((pos_x-1,pos_y-1))):
+                if pos_x-1 >= 0:
+                    return actions.LEFT
+
+    except IndexError:    
+        return actions.NONE
+
+    return actions.NONE
+
+
+
+def findWater(world: list[int, int],pos_x,pos_y: int):
+    """
+    Finds penguins in the world.\n
+    Return the position of the penguin if found, otherwise return (-1,-1)
+    """
+
+    
+    try:
+        if world.get((pos_x,pos_y-1)) == obstacles.WATER:
+            return actions.BRAKE
+        
+        
+        if world.get((pos_x+1,pos_y-2)) == obstacles.WATER:
+            if not is_obstacle(world.get((pos_x+1,pos_y-1))):
+                if pos_x+1<3:
+                    return actions.RIGHT
+                
+        if world.get((pos_x-1,pos_y-2)) == obstacles.WATER:
+            if not is_obstacle(world.get((pos_x-1,pos_y-1))):
+                if pos_x-1 >= 0:
+                    return actions.LEFT
+
+    except IndexError:    
+        return actions.NONE
+
+    return actions.NONE
+
+
+def findPenguin(world: list[int, int],pos_x,pos_y: int):
+    """
+    Finds water in the world.\n
+    Return the position of the water if found, otherwise return (-1,-1)
     """
 
     
@@ -89,6 +156,9 @@ def findPenguin(world: list[int, int],pos_x,pos_y: int):
         return actions.NONE
 
     return actions.NONE
+
+
+
 
 
 
