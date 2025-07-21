@@ -9,22 +9,22 @@ def drive(world):
     return escape(map,world)
 
 
-# def findPenguin(mapped_world: list[int, int], pos_y: int) -> tuple[int, int]:
-#     """
-#     Finds penguins in the world.\n
-#     Return the position of the penguin if found, otherwise return (-1,-1)
-#     """
-#
-#     for x_pos in range(len(mapped_world[0])):
-#         if mapped_world[pos_y - 1][x_pos] == obstacles.PENGUIN:
-#             return (x_pos, pos_y - 1)
-#
-#     for x_pos in range(len(mapped_world[0])):
-#         if not obstacle_T_F(mapped_world[pos_y - 1][[x_pos]]):
-#             if mapped_world[pos_y][x_pos] == obstacles.PENGUIN:
-#                 return (x_pos, pos_y)
-#
-#     return (-1, -1)
+def findPenguin(mapped_world: list[int, int], pos_y: int) -> tuple[int, int]:
+    """
+    Finds penguins in the world.\n
+    Return the position of the penguin if found, otherwise return (-1,-1)
+    """
+
+    for x_pos in range(len(mapped_world[0])):
+        if mapped_world[pos_y - 1][x_pos] == obstacles.PENGUIN:
+            return (x_pos, pos_y - 1)
+
+    for x_pos in range(len(mapped_world[0])):
+        if not obstacle_T_F(mapped_world[pos_y - 1][[x_pos]]):
+            if mapped_world[pos_y][x_pos] == obstacles.PENGUIN:
+                return (x_pos, pos_y)
+
+    return (-1, -1)
 
 
 def map_world(world) -> list[list[str]]:
@@ -57,34 +57,48 @@ def escape(map,world):
     #         return actions.RIGHT
     #     if penguin_pos[0] < x:
     #         return actions.LEFT
-    if x==0:
-        if (obstacle_T_F(map[2][x])==True and obstacle_T_F(map[2][x+1])==True) and (obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x+1]) == False):
+    if obstacle_T_F(world.get((x, y - 1))):
+        if x == 0:
             return actions.RIGHT
-        elif obstacle_T_F(map[1][x]) == True:
-                return actions.RIGHT
-        else:
-            return BRAKE(map[1][x])
-
-    elif x==2:
-        if (obstacle_T_F(map[2][x])==True and obstacle_T_F(map[2][x-1])==True) and (obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x-1]) == False):
+# <<<<<<< HEAD
+#         elif obstacle_T_F(map[1][x]) == True:
+#                 return actions.RIGHT
+#         else:
+#             return BRAKE(map[1][x])
+#
+#     elif x==2:
+#         if (obstacle_T_F(map[2][x])==True and obstacle_T_F(map[2][x-1])==True) and (obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x-1]) == False):
+#             return actions.LEFT
+#         elif obstacle_T_F(map[1][x]) == True:
+#                 return actions.LEFT
+#         else:
+#             return BRAKE(map[1][x])
+#
+#     elif x==1:
+#         if (obstacle_T_F(map[2][x])==True and obstacle_T_F(map[2][x-1])==True) and (obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x+1]) == False):
+#             return actions.RIGHT
+#         elif (obstacle_T_F(map[2][x])==True and obstacle_T_F(map[2][x+1])==True) and (obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x-1]) == False):
+#                 return actions.LEFT
+#         elif obstacle_T_F(map[1][x]) == True:
+#             if obstacle_T_F(map[1][x+1]) == False:
+#                 return actions.RIGHT
+#             else:
+#                 return actions.LEFT
+#         else:
+#             return BRAKE(map[1][x])
+#
+    if obstacle_T_F(world.get((x, y-1))):
+        if x == 2:
             return actions.LEFT
-        elif obstacle_T_F(map[1][x]) == True:
-                return actions.LEFT
-        else:
-            return BRAKE(map[1][x])
-
-    elif x==1:
-        if (obstacle_T_F(map[2][x])==True and obstacle_T_F(map[2][x-1])==True) and (obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x+1]) == False):
+        if not obstacle_T_F(world.get((x - 1, y - 1))):
+            return actions.LEFT
+        if not obstacle_T_F(world.get((x + 1, y - 1))):
             return actions.RIGHT
-        elif (obstacle_T_F(map[2][x])==True and obstacle_T_F(map[2][x+1])==True) and (obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x-1]) == False):
-                return actions.LEFT
-        elif obstacle_T_F(map[1][x]) == True:
-            if obstacle_T_F(map[1][x+1]) == False:
-                return actions.RIGHT
-            else:
-                return actions.LEFT
-        else:
-            return BRAKE(map[1][x])
+    else:
+        BRAKE(world.get((x, y-1)))
+        
+        
+    return actions.NONE
 
 
 def obstacle_T_F(obs):
