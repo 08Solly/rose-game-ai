@@ -16,10 +16,12 @@ def escape_obstacles(world) -> str:
     x = world.car.x
     y = world.car.y
 
+    print(x)
     found_penguin = findPenguin(world, x, y)
     found_water = findWater(world, x, y)
     found_crack = findCracks(world, x, y)
 
+    print(f"p:{found_penguin}, w: {found_water}, c: {found_crack}")
     if found_penguin != actions.NONE:
         return found_penguin
 
@@ -84,13 +86,13 @@ def findCracks(world: list[int, int], pos_x, pos_y: int):
         if world.get((pos_x + 1, pos_y - 2)) == obstacles.CRACK:
             if not is_obstacle(world.get((pos_x + 1, pos_y - 1))) and (
                     world.get((pos_x + 1, pos_y - 1)) not in (obstacles.WATER, obstacles.CRACK)):
-                if pos_x + 1 < 3:
+                if 6 > pos_x + 1 >= 0 and 3 != pos_x:
                     return actions.RIGHT
 
         if world.get((pos_x - 1, pos_y - 2)) == obstacles.CRACK:
-            if not is_obstacle(world.get((pos_x - 1, pos_y - 1))) and (
-                    world.get((pos_x - 1, pos_y - 1)) not in (obstacles.WATER, obstacles.CRACK)):
-                if pos_x - 1 >= 0:
+            if (not is_obstacle(world.get((pos_x - 1, pos_y - 1))) and
+                    (world.get((pos_x - 1, pos_y - 1)) not in (obstacles.WATER, obstacles.CRACK))):
+                if pos_x -1 != 2 and pos_x - 1 >= 0:
                     return actions.LEFT
 
     except IndexError:
@@ -112,13 +114,13 @@ def findWater(world: list[int, int], pos_x, pos_y: int):
         if world.get((pos_x + 1, pos_y - 2)) == obstacles.WATER:
             if not is_obstacle(world.get((pos_x + 1, pos_y - 1))) and (
                     world.get((pos_x + 1, pos_y - 1)) not in (obstacles.WATER, obstacles.CRACK)):
-                if pos_x + 1 < 3:
+                if 6 > pos_x + 1 >= 0 and 3 != pos_x:
                     return actions.RIGHT
 
         if world.get((pos_x - 1, pos_y - 2)) == obstacles.WATER:
-            if not is_obstacle(world.get((pos_x - 1, pos_y - 1))) and (
-                    world.get((pos_x - 1, pos_y - 1)) not in (obstacles.WATER, obstacles.CRACK)):
-                if pos_x - 1 >= 0:
+            if (not is_obstacle(world.get((pos_x - 1, pos_y - 1))) and
+                    (world.get((pos_x - 1, pos_y - 1)) not in (obstacles.WATER, obstacles.CRACK))):
+                if pos_x -1 != 2 and pos_x - 1 >= 0:
                     return actions.LEFT
 
     except IndexError:
@@ -139,12 +141,12 @@ def findPenguin(world: list[int, int], pos_x, pos_y: int):
 
         if world.get((pos_x + 1, pos_y - 2)) == obstacles.PENGUIN:
             if not is_obstacle(world.get((pos_x + 1, pos_y - 1))) and (world.get((pos_x + 1, pos_y - 1)) not in (obstacles.WATER,obstacles.CRACK)):
-                if pos_x + 1 < 3:
+                if 6 > pos_x + 1 >= 0 and 3 != pos_x:
                     return actions.RIGHT
 
         if world.get((pos_x - 1, pos_y - 2)) == obstacles.PENGUIN:
-            if not is_obstacle(world.get((pos_x - 1, pos_y - 1))) and (world.get((pos_x - 1, pos_y - 1)) not in (obstacles.WATER,obstacles.CRACK)):
-                if pos_x - 1 >= 0:
+            if not is_obstacle(world.get((pos_x - 1, pos_y - 1))) and (world.get((pos_x - 1, pos_y - 1)) not in (obstacles.WATER, obstacles.CRACK)):
+                if (pos_x -1 != 2) and (pos_x - 1 >= 0):
                     return actions.LEFT
 
 
