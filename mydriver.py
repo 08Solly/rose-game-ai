@@ -18,7 +18,6 @@ def escape_obstacles(world) -> str:
 
 
     found_penguin = findPenguin(world,x,y)
-
     if found_penguin != actions.NONE:
         return found_penguin
 
@@ -94,4 +93,6 @@ def findPenguin(world: list[int, int],pos_x,pos_y: int):
         return actions.NONE
 
     return actions.NONE
+
+
 
