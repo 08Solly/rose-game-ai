@@ -4,110 +4,35 @@ driver_name = "MyDriver"
 
 
 def drive(world):
-    map = map_world(world)
-
-    return escape(map,world)
+    return escape_obstacles(world)
 
 
-def findPenguin(mapped_world: list[int, int], pos_y: int) -> tuple[int, int]:
-    """
-    Finds penguins in the world.\n
-    Return the position of the penguin if found, otherwise return (-1,-1)
-    """
-
-    for x_pos in range(len(mapped_world[0])):
-        if mapped_world[pos_y - 1][x_pos] == obstacles.PENGUIN:
-            return (x_pos, pos_y - 1)
-
-    for x_pos in range(len(mapped_world[0])):
-        if not obstacle_T_F(mapped_world[pos_y - 1][[x_pos]]):
-            if mapped_world[pos_y][x_pos] == obstacles.PENGUIN:
-                return (x_pos, pos_y)
-
-    return (-1, -1)
-
-
-def map_world(world) -> list[list[str]]:
-    car_x: int = world.car.x
-    car_y: int = world.car.y
-
-    lanes: tuple[int] = (0, 1, 2)
-
-    # forward offset of the look by car
-    forward_look: int = 3
-
-    # get for every lane the obstacle in it for 3x3 car in bottom
-    lane_matrix: list[list[str]] = [
-        [(world.get((x, y)), y) for x in lanes] for y in range((car_y - forward_look -1), car_y - 1)]
-
-    poses = [([x for x in lanes], y) for y in range((car_y - forward_look -1 ), car_y - 1)]
-    [print(row) for row in poses]
-    [print(row) for row in lane_matrix]
-    print(f"x:{car_x}, y:{car_y}")
-
-    return lane_matrix
-
-def escape(map,world):
+def escape_obstacles(world):
     x = world.car.x
     y = world.car.y
 
-    # penguin_pos = findPenguin(map,y)
-    # if penguin_pos != (-1,-1):
-    #     if penguin_pos[0] > x:
-    #         return actions.RIGHT
-    #     if penguin_pos[0] < x:
-    #         return actions.LEFT
-    if obstacle_T_F(world.get((x, y - 1))):
-        if x == 0:
+    if is_obstacle(world.get((x, y - 1))):
+        if x == 0 or x == 3:
             return actions.RIGHT
-# <<<<<<< HEAD
-#         elif obstacle_T_F(map[1][x]) == True:
-#                 return actions.RIGHT
-#         else:
-#             return BRAKE(map[1][x])
-#
-#     elif x==2:
-#         if (obstacle_T_F(map[2][x])==True and obstacle_T_F(map[2][x-1])==True) and (obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x-1]) == False):
-#             return actions.LEFT
-#         elif obstacle_T_F(map[1][x]) == True:
-#                 return actions.LEFT
-#         else:
-#             return BRAKE(map[1][x])
-#
-#     elif x==1:
-#         if (obstacle_T_F(map[2][x])==True and obstacle_T_F(map[2][x-1])==True) and (obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x+1]) == False):
-#             return actions.RIGHT
-#         elif (obstacle_T_F(map[2][x])==True and obstacle_T_F(map[2][x+1])==True) and (obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x-1]) == False):
-#                 return actions.LEFT
-#         elif obstacle_T_F(map[1][x]) == True:
-#             if obstacle_T_F(map[1][x+1]) == False:
-#                 return actions.RIGHT
-#             else:
-#                 return actions.LEFT
-#         else:
-#             return BRAKE(map[1][x])
-#
-    if obstacle_T_F(world.get((x, y-1))):
-        if x == 2:
+        if x == 2 or x == 5:
             return actions.LEFT
-        if not obstacle_T_F(world.get((x - 1, y - 1))):
+        if not is_obstacle(world.get((x - 1, y - 1))):
             return actions.LEFT
-        if not obstacle_T_F(world.get((x + 1, y - 1))):
+        if not is_obstacle(world.get((x + 1, y - 1))):
             return actions.RIGHT
     else:
-        BRAKE(world.get((x, y-1)))
-        
-        
-    return actions.NONE
+        return brake(world.get((x, y - 1)))
 
 
-def obstacle_T_F(obs):
-    if obs not in (obstacles.NONE,obstacles.PENGUIN,obstacles.CRACK,obstacles.WATER):
-        return True
+# True -> is obstacle
+# False -> not obstacle
+def is_obstacle(obs):
+    if obs in (obstacles.NONE, obstacles.PENGUIN, obstacles.CRACK, obstacles.WATER):
+        return False
+    return True
 
-    return False
 
-def BRAKE(obs):
+def brake(obs):
     if obs == obstacles.WATER:
         return actions.BRAKE
     elif obs == obstacles.CRACK:
@@ -116,4 +41,3 @@ def BRAKE(obs):
         return actions.PICKUP
     else:
         return actions.NONE
-
