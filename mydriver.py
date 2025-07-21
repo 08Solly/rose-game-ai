@@ -62,14 +62,16 @@ def escape(map,world):
             return actions.RIGHT
         elif obstacle_T_F(map[1][x]) == True:
                 return actions.RIGHT
-        return actions.NONE
+        else:
+            return BRAKE(map[1][x])
 
     elif x==2:
         if (obstacle_T_F(map[2][x])==True and obstacle_T_F(map[2][x-1])==True) and (obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x-1]) == False):
             return actions.LEFT
         elif obstacle_T_F(map[1][x]) == True:
                 return actions.LEFT
-        return actions.NONE
+        else:
+            return BRAKE(map[1][x])
 
     elif x==1:
         if (obstacle_T_F(map[2][x])==True and obstacle_T_F(map[2][x-1])==True) and (obstacle_T_F(map[1][x]) == False and obstacle_T_F(map[1][x+1]) == False):
@@ -81,12 +83,23 @@ def escape(map,world):
                 return actions.RIGHT
             else:
                 return actions.LEFT
-        return actions.NONE
+        else:
+            return BRAKE(map[1][x])
 
 
 def obstacle_T_F(obs):
-    if obs != obstacles.NONE or obs != obstacles.PENGUIN:
+    if obs not in (obstacles.NONE,obstacles.PENGUIN,obstacles.CRACK,obstacles.WATER):
         return True
 
     return False
+
+def BRAKE(obs):
+    if obs == obstacles.WATER:
+        return actions.BRAKE
+    elif obs == obstacles.CRACK:
+        return actions.JUMP
+    elif obs == obstacles.PENGUIN:
+        return actions.PICKUP
+    else:
+        return actions.NONE
 
