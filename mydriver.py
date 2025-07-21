@@ -151,6 +151,8 @@ def findPenguin(world: list[int, int],pos_x,pos_y: int):
             if not is_obstacle(world.get((pos_x-1,pos_y-1))):
                 if pos_x-1 >= 0:
                     return actions.LEFT
+            
+
 
     except IndexError:    
         return actions.NONE
