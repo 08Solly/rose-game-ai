@@ -74,20 +74,20 @@ def findPenguin(world: list[int, int],pos_x,pos_y: int):
         if world.get((pos_x, pos_y - 1)) == obstacles.PENGUIN:
             return actions.PICKUP
         
-        if world.get((pos_x-1, pos_y-2)) == obstacles.PENGUIN:
-            if not is_obstacle(world.get((pos_x-1, pos_y-1))):
-                return actions.LEFT
-        if world.get((pos_x+1, pos_y-2)) == obstacles.PENGUIN:
-            if not is_obstacle(world.get((pos_x+1, pos_y-1))):
-                return actions.RIGHT
+        if world.get((pos_x-1, pos_y-2)) == obstacles.PENGUIN and is_obstacle(world.get((pos_x-1, pos_y-1)))==False:
+            return actions.LEFT
+        if world.get((pos_x+1, pos_y-2)) == obstacles.PENGUIN and is_obstacle(world.get((pos_x+1, pos_y-1)))==False:
+            return actions.RIGHT
         
-        if world.get((pos_x-2, pos_y-3)) == obstacles.PENGUIN:
-            if not is_obstacle(world.get((pos_x-2, pos_y-2))):
-                    return actions.LEFT
+        if world.get((pos_x-2, pos_y-3)) == obstacles.PENGUIN and is_obstacle(world.get((pos_x-2, pos_y-2)))==False:
+            return actions.LEFT
         
-        if world.get((pos_x+2, pos_y-3)) == obstacles.PENGUIN:
-            if not is_obstacle(world.get((pos_x+2, pos_y-2))):
-                    return actions.RIGHT
+        if world.get((pos_x+2, pos_y-3)) == obstacles.PENGUIN and is_obstacle(world.get((pos_x+2, pos_y-2)))==False:
+            return actions.RIGHT
+
+        if world.get((pos_x-2, pos_y-3)) == obstacles.PENGUIN and is_obstacle(world.get((pos_x-2, pos_y-2)))==False:
+            return actions.LEFT
+
 
     except IndexError:    
         return actions.NONE
