@@ -3,13 +3,19 @@ from rose.common import obstacles, actions  # NOQA
 driver_name = "MyDriver"
 
 
-def drive(world):
+def drive(world) -> str:
     return escape_obstacles(world)
 
 
-def escape_obstacles(world):
+def escape_obstacles(world) -> str:
+    """
+    Returns action according to world
+
+    """
+    # car locations
     x = world.car.x
     y = world.car.y
+
 
     found_penguin = findPenguin(world,x,y)
 
@@ -17,10 +23,14 @@ def escape_obstacles(world):
         return found_penguin
 
     if is_obstacle(world.get((x, y - 1))):
+        # left lane
         if x == 0 or x == 3:
             return actions.RIGHT
+
+        # right lane
         if x == 2 or x == 5:
             return actions.LEFT
+
         if not is_obstacle(world.get((x - 1, y - 1))):
             return actions.LEFT
         if not is_obstacle(world.get((x + 1, y - 1))):
@@ -29,15 +39,21 @@ def escape_obstacles(world):
         return brake(world.get((x, y - 1)))
 
 
-# True -> is obstacle
-# False -> not obstacle
-def is_obstacle(obs):
+def is_obstacle(obs) -> bool:
+    """
+    Returns True if is obstacle, otherwise False
+
+    """
     if obs in (obstacles.NONE, obstacles.PENGUIN, obstacles.CRACK, obstacles.WATER):
         return False
     return True
 
 
-def brake(obs):
+def brake(obs) -> str:
+    """
+    Returns action according to special obstacle
+
+    """
     if obs == obstacles.WATER:
         return actions.BRAKE
     elif obs == obstacles.CRACK:
