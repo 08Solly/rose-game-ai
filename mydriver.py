@@ -4,8 +4,35 @@ driver_name = "MyDriver"
 
 
 def drive(world) -> str:
+    points = locate_points(world)
+    if points != actions.NONE:
+        return points
     return escape_obstacles(world)
 
+
+def locate_points(world) -> str:
+    """
+    Trying to steer to pinguin then water and then crack
+
+    """
+    # car locations
+    x = world.car.x
+    y = world.car.y
+
+    found_penguin = findPenguin(world, x, y)
+    found_water = findWater(world, x, y)
+    found_crack = findCracks(world, x, y)
+
+    print(f"p:{found_penguin}, w: {found_water}, c: {found_crack}")
+
+    if found_penguin != actions.NONE:
+        return found_penguin
+
+    if found_crack != actions.NONE:
+        return found_crack
+
+    if found_water != actions.NONE:
+        return found_water
 
 def escape_obstacles(world) -> str:
     """
@@ -16,21 +43,7 @@ def escape_obstacles(world) -> str:
     x = world.car.x
     y = world.car.y
 
-    print(x)
-    found_penguin = findPenguin(world, x, y)
-    found_water = findWater(world, x, y)
-    found_crack = findCracks(world, x, y)
-
-    print(f"p:{found_penguin}, w: {found_water}, c: {found_crack}")
-    if found_penguin != actions.NONE:
-        return found_penguin
-
-    if found_crack != actions.NONE:
-        return found_crack
-
-    if found_water != actions.NONE:
-        return found_water
-
+    # avoiding obstacles
     if is_obstacle(world.get((x, y - 1))):
         # left lane
         if x == 0 or x == 3:
@@ -40,11 +53,13 @@ def escape_obstacles(world) -> str:
         if x == 2 or x == 5:
             return actions.LEFT
 
+        # move towards points
         if not is_obstacle(world.get((x - 1, y - 1))):
             return actions.LEFT
         if not is_obstacle(world.get((x + 1, y - 1))):
             return actions.RIGHT
     else:
+        # get wanted points
         return brake(world.get((x, y - 1)))
 
 
