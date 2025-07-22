@@ -2,6 +2,10 @@ from rose.common import obstacles, actions  # NOQA
 
 driver_name = "MyDriver"
 
+lane = 0
+
+max_left = 0
+max_right = 2
 
 def drive(world) -> str:
     return escape_obstacles(world)
@@ -15,6 +19,12 @@ def escape_obstacles(world) -> str:
     # car locations
     x = world.car.x
     y = world.car.y
+
+
+    #Set the lane
+    if x>=3:
+        max_left = 3
+        max_right = 5
 
 
     found_penguin = findPenguin(world,x,y)
@@ -87,12 +97,12 @@ def findCracks(world: list[int, int],pos_x,pos_y: int):
         
         if world.get((pos_x+1,pos_y-2)) == obstacles.CRACK:
             if not is_obstacle(world.get((pos_x+1,pos_y-1))):
-                if pos_x+1<3:
+                if pos_x+1<max_right:
                     return actions.RIGHT
                 
         if world.get((pos_x-1,pos_y-2)) == obstacles.CRACK:
             if not is_obstacle(world.get((pos_x-1,pos_y-1))):
-                if pos_x-1 >= 0:
+                if pos_x-1 >= max_left:
                     return actions.LEFT
 
     except IndexError:    
@@ -116,12 +126,12 @@ def findWater(world: list[int, int],pos_x,pos_y: int):
         
         if world.get((pos_x+1,pos_y-2)) == obstacles.WATER:
             if not is_obstacle(world.get((pos_x+1,pos_y-1))):
-                if pos_x+1<3:
+                if pos_x+1<max_right:
                     return actions.RIGHT
                 
         if world.get((pos_x-1,pos_y-2)) == obstacles.WATER:
             if not is_obstacle(world.get((pos_x-1,pos_y-1))):
-                if pos_x-1 >= 0:
+                if pos_x-1 >= max_left:
                     return actions.LEFT
 
     except IndexError:    
@@ -144,28 +154,28 @@ def findPenguin(world: list[int, int],pos_x,pos_y: int):
 
         if world.get((pos_x + 1, pos_y - 3)) == obstacles.PENGUIN:
             if not is_obstacle(world.get((pos_x + 1, pos_y - 1))) and not  not is_obstacle(world.get((pos_x + 1, pos_y - 2))) and (world.get((pos_x + 1, pos_y - 1)) not in (obstacles.WATER,obstacles.CRACK)):
-                if pos_x + 1 < 3:
+                if pos_x + 1 < max_right:
                     return actions.RIGHT    
 
         if world.get((pos_x - 1, pos_y - 3)) == obstacles.PENGUIN:
             if not is_obstacle(world.get((pos_x - 1, pos_y - 1))) and not  not is_obstacle(world.get((pos_x - 1, pos_y - 2))) and (world.get((pos_x - 1, pos_y - 1)) not in (obstacles.WATER,obstacles.CRACK)):
-                if pos_x - 1 > 0:
+                if pos_x - 1 > max_left:
                     return actions.LEFT   
         
         if world.get((pos_x+1,pos_y-2)) == obstacles.PENGUIN:
             if not is_obstacle(world.get((pos_x+1,pos_y-1))):
-                if pos_x+1<3:
+                if pos_x+1<max_right:
                     return actions.RIGHT
                 
         if world.get((pos_x-1,pos_y-2)) == obstacles.PENGUIN:
             if not is_obstacle(world.get((pos_x-1,pos_y-1))):
-                if pos_x-1 >= 0:
+                if pos_x-1 >= max_left:
                     return actions.LEFT
                 
-        if world.get((pos_x + 2, pos_y - 3)) == obstacles.PENGUIN and pos_x+2<=2:
+        if world.get((pos_x + 2, pos_y - 3)) == obstacles.PENGUIN and pos_x+2<=max_right:
             return actions.RIGHT    
 
-        if world.get((pos_x - 2, pos_y - 3)) == obstacles.PENGUIN and pos_x-2>=0 :
+        if world.get((pos_x - 2, pos_y - 3)) == obstacles.PENGUIN and pos_x-2>=max_left :
             return actions.LEFT 
             
 
