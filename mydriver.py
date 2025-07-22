@@ -141,6 +141,16 @@ def findPenguin(world: list[int, int],pos_x,pos_y: int):
         if world.get((pos_x,pos_y-1)) == obstacles.PENGUIN:
             return actions.PICKUP
         
+
+        if world.get((pos_x + 1, pos_y - 3)) == obstacles.PENGUIN:
+            if not is_obstacle(world.get((pos_x + 1, pos_y - 1))) and not  not is_obstacle(world.get((pos_x + 1, pos_y - 2))) and (world.get((pos_x + 1, pos_y - 1)) not in (obstacles.WATER,obstacles.CRACK)):
+                if pos_x + 1 < 3:
+                    return actions.RIGHT    
+
+        if world.get((pos_x - 1, pos_y - 3)) == obstacles.PENGUIN:
+            if not is_obstacle(world.get((pos_x - 1, pos_y - 1))) and not  not is_obstacle(world.get((pos_x - 1, pos_y - 2))) and (world.get((pos_x - 1, pos_y - 1)) not in (obstacles.WATER,obstacles.CRACK)):
+                if pos_x - 1 > 0:
+                    return actions.LEFT   
         
         if world.get((pos_x+1,pos_y-2)) == obstacles.PENGUIN:
             if not is_obstacle(world.get((pos_x+1,pos_y-1))):
@@ -151,6 +161,12 @@ def findPenguin(world: list[int, int],pos_x,pos_y: int):
             if not is_obstacle(world.get((pos_x-1,pos_y-1))):
                 if pos_x-1 >= 0:
                     return actions.LEFT
+                
+        if world.get((pos_x + 2, pos_y - 3)) == obstacles.PENGUIN and pos_x+2<=2:
+            return actions.RIGHT    
+
+        if world.get((pos_x - 2, pos_y - 3)) == obstacles.PENGUIN and pos_x-2>=0 :
+            return actions.LEFT 
             
 
 
